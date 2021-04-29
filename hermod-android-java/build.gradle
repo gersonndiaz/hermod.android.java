@@ -2,7 +2,23 @@ plugins {
     id 'com.android.library'
 }
 
-apply from: 'gradle-upload.gradle'
+apply plugin: 'maven-publish'
+
+def getVersionName = { ->
+    return "1.0.0"
+}
+
+def getArtifactId = { ->
+    return "hermod-android-java"
+}
+
+def getGroupId = { ->
+    return "cl.ckelar"
+}
+
+def getGitHubUrl = { ->
+    return "https://maven.pkg.github.com/gersonndiaz/hermod.android.java"
+}
 
 android {
     compileSdkVersion 29
@@ -27,6 +43,29 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+publishing {
+    publications {
+        bar(MavenPublication) {
+            groupId getGroupId()
+            artifactId getArtifactId()
+            version getVersionName()
+            // Place the path of your artifact here
+            artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+
+            url = uri(getGitHubUrl())
+            credentials {
+                username = System.getenv("GITHUB_USER_NAME")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
 
