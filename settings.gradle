@@ -1,0 +1,3 @@
+include ':Hermod'
+include ':app'
+rootProject.name = "Hermod"
